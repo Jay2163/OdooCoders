@@ -1,0 +1,66 @@
+<odoo>
+    <!--stock question tree view-->
+    <record id="stackit_question_view_list" model="ir.ui.view">
+        <field name="name">stockit.question.list.view</field>
+        <field name="model">stackit.question</field>
+        <field name="arch" type="xml">
+            <list string="Questions">
+                <field name="title" string="Question Title"/>
+                <field name="description" string="Question Description"/>
+                <field name="tag_ids" widget="many2many_tags"/>
+                <field name="user_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!--book form view-->
+    <record id="stackit_question_view_form" model="ir.ui.view">
+        <field name="name">stockit.question.form.view</field>
+        <field name="model">stackit.question</field>
+        <field name="arch" type="xml">
+            <form string="Questions">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="title" string="Question Title"/>
+                            <field name="description" string="Question Description"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="user_id"/>
+                            <field name="accepted_answer_id" string="Best Answer"/>
+                        </group>
+                        <notebook>
+                            <page string="Answers">
+                                <field name="answer_ids">
+                                        <list editable="bottom">
+                                            <field name="answer"/>
+                                            <field name="user_id" string="User"/>
+                                        </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- book action-->
+    <record id="action_stackit_question_list" model="ir.actions.act_window">
+        <field name="name">Question</field>
+        <field name="res_model">stackit.question</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="stackit_question_view_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Generate library Details
+            </p>
+        </field>
+    </record>
+
+    <!-- menu-->
+    <menuitem id="menu_stackit" name="Stackit" sequence="12"/>
+    <menuitem id="stackit_main_menu" name="Stackit QA" parent="menu_stackit" action="action_stackit_question_list" sequence="0"/>
+
+
+</odoo>
+

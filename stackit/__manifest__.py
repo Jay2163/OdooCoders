@@ -10,6 +10,10 @@
                    "like rich text editing, tagging, voting, and real-time "
                    "notifications.",
     'data': [
+        "security/ir.model.access.csv",
+        "views/stackit_question_views.xml",
+        # "views/stackit_answer_views.xml",
+        "views/stackit_tag_views.xml",
     ],
     'assets': {
     },
