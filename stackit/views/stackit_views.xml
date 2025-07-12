@@ -1,0 +1,171 @@
+<odoo>
+    <template id="stackit_form_template" name="StackIt Form Page">
+        <t t-call="website.layout">
+            <div class="container mt-5 mb-5">
+                <h2 class="mb-4">Ask a Question</h2>
+                <form method="post" t-att-action="url_for('/stackit/submit')">
+                    <div class="form-group mb-3">
+                        <label for="title">Title</label>
+                        <input type="text" name="title" id="title" class="form-control" required="required"/>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="description">Description</label>
+                        <textarea name="description" id="description" rows="4" class="form-control o_field_html"
+                                  required="required"></textarea>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="tags">Tags</label>
+                        <textarea name="tags" id="tags" class="form-control" rows="2"
+                                  placeholder="comma-separated tags"></textarea>
+                    </div>
+
+
+                    <button type="submit" class="btn btn-primary">Submit Question</button>
+                </form>
+            </div>
+        </t>
+    </template>
+
+    <template id="questions_list_template" name="All Questions Page">
+        <t t-call="website.layout">
+            <div class="container mt-5 mb-5 answer_page">
+                <h2 class="mb-4">All Questions</h2>
+
+                <t t-if="questions">
+                    <t t-foreach="questions" t-as="q">
+                        <a t-attf-href="/questions/{{ q.id }}"
+                           class="d-block text-decoration-none text-dark">
+                            <div class="card answer-card p-4" t-att-data-answer-slug="q.id">
+
+                                <!-- Question Title -->
+                                <div class="d-flex justify-content-between">
+                                    <h4 class="mb-2">
+                                        <t t-esc="q.title"/>
+                                    </h4>
+                                    <span class="text-end">
+                                        <t t-esc="len(q.answer_ids)"/>
+                                        Ans
+                                    </span>
+                                </div>
+
+
+                                <div class="mb-2">
+                                    <t t-foreach="q.tag_ids" t-as="tag">
+                                        <span class="badge bg-secondary me-1">
+                                            <t t-esc="tag.name"/>
+                                        </span>
+                                    </t>
+                                </div>
+
+                                <!-- Question Description -->
+                                <div class="mb-2" t-raw="q.description"/>
+
+                                <!-- Question Author -->
+                                <small>
+                                    <strong>Asked by:</strong>
+                                    <t t-esc="q.user_id.name"/>
+                                </small>
+                            </div>
+                        </a>
+                        <div style="margin-top: 10px; margin-bottom: 30px;">
+                            <t t-if="not website.is_public_user()">
+                                <button type="button" class="btn btn-primary mt-3" style="width: 200px;"
+                                        data-bs-toggle="modal"
+                                        t-att-data-bs-target="'#answerModal_' + str(q.id)">
+                                    Give Answer
+                                </button>
+                            </t>
+                            <!-- Modal for Answer Submission -->
+                            <div class="modal fade" t-att-id="'answerModal_' + str(q.id)" tabindex="-1">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <form method="post" t-att-action="'/questions/give_answer/%d' % q.id">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Answer Question</h5>
+                                                <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label>Your Answer</label>
+                                                    <textarea name="answer" class="form-control" rows="6"
+                                                              required="required"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Submit Answer</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </template>
+
+
+    <template id="question_detail_template" name="Question Detail Page">
+        <t t-call="website.layout">
+            <div class="container mt-5 mb-5">
+                <h2>
+                    <t t-esc="question.title"/>
+                </h2>
+
+                <div class="mb-3">
+                    <t t-foreach="question.tag_ids" t-as="tag">
+                        <span class="badge bg-info me-1">
+                            <t t-esc="tag.name"/>
+                        </span>
+                    </t>
+                </div>
+
+                <div class="mb-4" t-raw="question.description"/>
+
+                <p>
+                    <strong>Asked by:</strong>
+                    <t t-esc="question.user_id.name"/>
+                </p>
+
+                <t t-if="question.answer_ids">
+                    <hr/>
+                    <h4>Answers:</h4>
+                    <t t-foreach="question.answer_ids" t-as="ans">
+                        <div class="border p-3 mb-3">
+                            <div t-raw="ans.answer"/>
+                            <small class="text-muted">—
+                                <t t-esc="ans.user_id.name"/>
+                            </small>
+                        </div>
+                    </t>
+                </t>
+
+                <t t-if="not question.answer_ids">
+                    <p>No answers yet.</p>
+                </t>
+            </div>
+        </t>
+    </template>
+
+
+    <data>
+        <record id="website_menu_stackit" model="website.menu">
+            <field name="name">Stackit Question</field>
+            <field name="url">/stackit</field>
+            <field name="parent_id" ref="website.main_menu"/>
+        </record>
+        <record id="website_menu_questions_stackit" model="website.menu">
+            <field name="name">All Questions</field>
+            <field name="url">/questions</field>
+            <field name="parent_id" ref="website.main_menu"/>
+        </record>
+    </data>
+
+
+</odoo>

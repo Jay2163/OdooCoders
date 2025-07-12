@@ -14,10 +14,15 @@
         "views/stackit_question_views.xml",
         # "views/stackit_answer_views.xml",
         "views/stackit_tag_views.xml",
+        'views/stackit_views.xml',
+        # 'views/templates.xml',
     ],
     'assets': {
+        'web.assets_frontend' : [
+            'stackit/static/src/js/answer.js',
+        ]
     },
-    'depends':['base'],
+    'depends':['base','website'],
     'application': True,
     'license': 'LGPL-3',
 }

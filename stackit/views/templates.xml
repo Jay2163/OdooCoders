@@ -1,24 +1,11 @@
+<!-- views/stacklist_template.xml -->
 <odoo>
-    <data>
-<!--
-        <template id="listing">
-          <ul>
-            <li t-foreach="objects" t-as="object">
-              <a t-attf-href="#{ root }/objects/#{ object.id }">
-                <t t-esc="object.display_name"/>
-              </a>
-            </li>
-          </ul>
-        </template>
-        <template id="object">
-          <h1><t t-esc="object.display_name"/></h1>
-          <dl>
-            <t t-foreach="object._fields" t-as="field">
-              <dt><t t-esc="field"/></dt>
-              <dd><t t-esc="object[field]"/></dd>
-            </t>
-          </dl>
-        </template>
--->
-    </data>
+    <template id="stacklist_template" name="StackList Page">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <h1>Welcome to StackList</h1>
+                <p>This is a custom page added to the website menu.</p>
+            </div>
+        </t>
+    </template>
 </odoo>
